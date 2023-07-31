@@ -1,0 +1,66 @@
+
+// Создать коллекцию users и заполнить документами (4 штуки) со следующими свойствами (id, name, age, gender). Используйте следующие данные:
+
+/*
+1 Anatoly 28 m
+2 Svetlana 25 f
+3 Nikita 33 m
+4 Olga 22 f
+*/
+
+db.users.insertMany(
+    [{
+        _id: 1,
+        name:'Anatoly',
+        age: 28,
+        gender: 'm'
+},
+
+    {
+        _id: 2,
+        name:'Svetlana',
+        age: 25,
+        gender: 'f'
+},
+    {
+        _id: 3,
+        name:'Nikita',
+        age: 33,
+        gender: 'm'
+},
+    {
+        _id: 4,
+        name:'Olga',
+        age: 22,
+        gender: 'f'
+}])
+
+// Запросы
+
+  // 1. Вывести данные о всех представительницах женского пола
+db.users.find({gender:'f'})
+
+
+  // 2. Вывести данные о всех представительницах женского пола  и людей старше 30
+
+db.users.find({
+    $or: [
+    {gender:'f'},
+    {age:{$gt:30}}
+    ]
+})
+  // 3. Вывести всех пользователей, у которых имя входит в список (Anatoly, Dmitry, Olga, Semen)
+db.users.find({
+    name: {$in:['Anatoly', 'Dmitry', 'Olga', 'Semen']}
+})
+
+// 4. Вывести пользователя с идентификатором 3
+db.users.find({
+    _id:3
+})
+
+// 5. Вывести пользователей в возрасте от 30 до 40 лет (включительно)
+
+db.users.find({
+    age: {$gte:30,$lte:40}
+})

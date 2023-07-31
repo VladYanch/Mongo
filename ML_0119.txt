@@ -1,0 +1,195 @@
+// 1. Переключится на базу group+35_36_1
+// 2. Создать в базе коллекцию products
+// 3. Заполнить коллекцию следующими данными:
+
+[  
+  {
+    id: 1,
+    title: "Велосипед",
+    price: 45000,
+    count: 12
+  },
+    {
+    id: 2,
+    title: "Самокат",
+    price: 15000,
+    count: 10
+  },
+  {
+    id: 3,
+    title: "Ролики",
+    price: 20000,
+    count: 20
+  },
+  {
+    id: 4,
+    title: "Лыжи",
+    price: 22000,
+    count: 15
+  },
+  {
+    id: 5,
+    title: "Скейт",
+    price: 19000,
+    count: 4
+  },
+  {
+    id: 6,
+    title: "Сноуборд",
+    price: 33000,
+    count: 17
+  }
+]
+
+// 1. 
+// VS
+use group_35_36_1
+
+// 2.
+db.createCollection('products')
+
+// 3.
+db.products.insertMany([ {} ])
+
+// 5. Найти товары, количество которых равно 10
+db.products.find({count:10})
+
+// 7. Найти товары, количество которых меньше или равно 10
+db.products.find({count:{$lte:10}})
+
+// 8. Найти все товары, у которых title Скейт, Сноуборд или Лыжи
+db.products.find({
+    title: {$in: ['Скейт','Сноуборд','Лыжи']}
+})
+
+// 9. Найти товары, цена которых больше 20000 и количество
+// которых меньше или равно 20
+db.products.find({
+    $and:[
+        {price:{$gt:20000}},
+        {count:{$lte:20}}
+    ]
+})
+
+db.products.find({
+  price:{$gt:20000},
+        count:{$lte:20}
+})
+
+// 10. Найти товары, количество которых больше или равно 10
+// и title которых Лыжи, Сноуборд, Скейт и Велосипед
+
+db.products.find({
+    title: {$in: ['Скейт','Сноуборд','Лыжи']},
+    count:{$gte:10}
+})
+
+// 11. Удалить продукт с id 6
+db.products.deleteOne({ id: 6 })
+
+// 12. Удалите все продукты, количество которых меньше или равно 10
+db.products.deleteMany({ count: {$lte: 10 }})
+
+// 13. Удалить все документы в коллекции
+db.products.deleteMany({})
+
+// updateOne(), updateMany()
+
+// 1. В документе с id 1 заменить количество товара на 15
+db.products.updateOne(
+    {id:1},
+    {$set: {count:15}}
+)
+
+// 2. Всем документам добавить свойство country
+// и задать ему значение Germany 
+db.products.updateMany(
+    {},
+    {$set: {country:"Germany"}}
+)
+
+// 3. У всех товаров, количество которых меньше или равно 10,
+// заменить значение country на France
+db.products.updateMany(
+    {count: {$lte: 10}},
+    {$set: {country: 'France'}}
+)
+
+// 4. У всех товаров, количество которых больше 20 и цена которых
+// меньше или равна 20000 заменить свойство country на Spain
+db.products.updateMany(
+  {
+    count: {$gt: 20},
+    price: {$lte: 20000}
+  },
+  {$set: {country: 'Spain'}}
+);
+
+// 5. У всех товаров, количество которых больше  или равно 20 или цена которых
+// меньше или равна 20000 заменить свойство country на Spain
+db.products.updateMany({
+    $or: [
+        {count: {$gte:20},
+    price: {$lte:20000}}
+    ]},
+    {$set:{country:'Spain'}
+})
+
+
+db.products.updateMany(
+//   {},
+//   {$inc: {count:10}}
+// );
+
+// 7. Всем документам уменьшить count на 10
+
+db.products.updateMany(
+    {},
+    {$inc: {count:-10}}
+);
+
+// 8. Всем документам заменить 
+//значение свойства country на пустой массив
+
+db.products.updateMany(
+    {},
+    {$set: {country: []}}
+)
+
+// 9. добавить документам с id 1,3,5 добавить 'Germany'
+db.products.updateMany(
+    {id: {$in: [1,3,5]}},
+    {$push: {country: 'Germany'}}
+)
+
+// 10. Документам с ценой 21000 и больше добавить в массив
+// country значения France и Spain
+db.products.updateMany(
+    {price: {$gte:21000}},
+    {$push: {country: {$each: ['France','Spain'] }}}
+)
+
+// 11. У документов с id 1, 2, 3 удалить свойство country
+db.products.updateMany(
+    {id: {$in:[1,3,5]}},
+    {$unset: {country: ''}}
+)
+
+// 12. У всех документов удалить свойство country
+db.products.updateMany(
+    {},
+    {$unset: {country: ''}}
+)
+
+//ДЗ:
+// 1. Найти товары, количество которых больше 10
+
+db.products.find({count: {$gte: 10}})
+
+// 2. Найти товары, количество которых от 10 до 20 (включительно) и цена больше 20000
+// 3. У всех товаров, кол-во которых меньше 10, задайте кол-во 10
+// 4. У всех товаров, цена которых меньше 20000 увеличьте цена на 5000
+// 5. Добавить свойство страны (country) а в качестве значения пустой массив
+// 6. Товарам с id 1 и 4 добавить в качестве поставщика Spain
+// 7. Всем товарам добавить в качестве поставщика USA, Germany и France
+

@@ -1,0 +1,44 @@
+//ДЗ:
+use ('group_35_36_1');
+db.products.find()
+// 1. Найти товары, количество которых больше 10
+db.products.find({count: {$gte: 10}})
+
+// 2. Найти товары, количество которых от 10 до 20 (включительно) и цена больше 20000
+db.products.find(
+    {count: {$gte:10,$lte:20},
+    price: {$gte:20000}}
+)
+
+// 3. У всех товаров, кол-во которых меньше 10, задайте кол-во 10
+db.products.updateMany(
+    {count: {$lt:10}},
+    {$set: {count:10}}
+)
+// 4. У всех товаров, цена которых меньше 20000 увеличьте цена на 5000
+db.products.updateMany(
+        {price: {$lt:20000}},
+        {$inc: {price:5000}}
+)
+// 5. Добавить свойство страны (country) а в качестве значения пустой массив
+db.products.updateMany(
+    {},
+    {$set: {country:[]}}
+)
+// 6. Товарам с id 1 и 4 добавить в качестве поставщика Spain
+db.products.updateMany(
+    {id: {$in:[1,4]}},
+    {$push: {country:'Spain'}}
+)
+// 7. Всем товарам добавить в качестве поставщика USA, Germany и France
+db.products.updateMany(
+  {},
+  {$push: {country: {$each: ['USA', 'Germany', 'France']}}}
+)
+
+db.products.updateMany(
+  {},
+  {$addToSet: {country: {$each: ['USA', 'Germany', 'France']}}}
+)
+
+

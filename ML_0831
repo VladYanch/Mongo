@@ -1,0 +1,97 @@
+2. Заполнить коллекцию workers 5 документами со свойствами id, firstname, lastname, age, position, salary, skills. Используйте следующие данные:
+    1. Inga Petrova, 27, Barista, 1500, [’preparing drinks’, ‘cleaning equipment’] 
+    2. Boris Orlov, 36, Server, 2400, [’taking orders’, ‘suggesting meals’, ‘taking payments’]
+    3. Ivan Demidov, 32, Chef, 3200, [’preparing food’, ‘baking bread’]
+    4. Marina Sidorova, 22, Hostess, 1700, [’greeting guests’, ‘seating guests’, ‘answering phone calls’]
+    5. Olga Ivanova, 43, Sommelier, 2500, [’curating a wine list’, ‘creating wine pairings’]
+
+    use group_35_36_1;
+    db.createCollection('workers');
+    db.workers.insertMany([
+    {
+        id: 1,
+        firstname: 'Inga',
+        lastname: 'Petrova',
+        age: 27,
+        position: 'Barista',
+        salary: 1500,
+        skills: ['preparing drinks', 'cleaning equipment']
+    },
+    {
+        id: 2,
+        firstname: 'Boris',
+        lastname: 'Orlov',
+        age: 36,
+        position: 'Server',
+        salary: 2400,
+        skills: ['taking orders', 'suggesting meals', 'taking payments']
+    },
+    {
+        id: 3,
+        firstname: 'Ivan',
+        lastname: 'Demidov',
+        age: 32,
+        position: 'Chef',
+        salary: 3200,
+        skills: ['preparing food', 'baking bread']
+    },
+    {
+        id: 4,
+        firstname: 'Marina',
+        lastname: 'Sidorova',
+        age: 22,
+        position: 'Hostess',
+        salary: 1700,
+        skills: ['greeting guests', 'seating guests', 'answering phone calls']
+    },
+    {
+        id: 5,
+        firstname: 'Olga',
+        lastname: 'Ivanova',
+        age: 43,
+        position: 'Sommelier',
+        salary: 2500,
+        skills: ['curating a wine list', 'creating wine pairings']
+    }
+]);
+
+Найти работника с ID равным 3.
+db.workers.find({id:3})
+
+Найти всех работников, у которых зарплата выше 2000. Вывести имя и зарплату
+db.workers.find({salary: $gt:2000},{firstname:1,salary:1})
+
+Найти всех работников, у которых зарплата выше 2000 и возраст меньше 40. Вывести имя, зарплату и возраст.
+db.workers.find(
+    {$and: [
+        {salary: {$gt: 2000}},
+        {age: {$lt: 40}}
+    ]},
+    {firstname: 1, salary: 1, age: 1}
+)
+
+Найти всех работников с зарплатой между 1800 и 2500.
+    db.workers.find(
+        {$and: [
+            {salary: {$gt: 1800}},
+            {salary: {$lt: 2500}}
+        ]},
+        {firstname: 1, salary: 1}
+    )
+
+    db.workers.find(
+        {salary: {$gt: 1800, $lt: 2500}},
+        {firstname: 1, salary: 1}
+    )
+
+    Найти всех работников, возраст которых не равен 27.
+    db.workers.find({
+        age: {$ne:27}
+        },
+        {firstname: 1, salary: 1}
+    )
+
+    Найти всех работников, занимающих должность "Barista" или "Chef".
+    db.workers.find({
+    position: {$in:['Barista','Chef']
+    }})

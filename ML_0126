@@ -1,0 +1,214 @@
+// 1. Всем документам добавить свойство city со значением Berlin
+db.products.updateMany(
+    {id: {in: [1,3,5]}},
+    {$set: {city:'Paris'}}
+);
+
+// 2. Документам с айди 1, 3, 5, цена которых больше
+// или равна 10000, изменить значение свойства city на Paris
+db.products.updateMany(
+    {id: {$in: [1,3,5]}},
+    {price: {$gte:10000}},
+    {$set: {city:'Paris'}}
+);
+
+// 3. У всех документов переименовать свойство city в product_city
+db.products.updateMany(
+    {},
+    {$rename: {'city': 'product_city'}}
+);
+
+// 4. У всех документов удалить свойство product_city
+db.products.updateMany(
+    {},
+    {$unset: {product_city:''}}
+);
+
+// 5. Документу с айди 4 добавить в country значения Spain,
+// Ukraine, Germany, чтобы в массив не добавилось дублей
+db.products.updateMany(
+    {id: 4},
+    {$addToSet: {country: {$each: ['Spain', 'Ukraine', 'Germany']}}}
+);
+
+// 6. Всем документам уменьшить count на 5
+db.products.updateMany(
+    {},
+    {$inc: {count: -5}}
+);
+
+// 7. Документу с айди 6 удалить в country значениe Germany
+db.products.updateOne(
+    {id:6},
+    {$pull: {country: 'Germany'}}
+);
+
+// Практика
+// 1. Создать коллекцию profiles со свойствами
+// (_id, firstname, lastname, age, gender, position, salary, country, city)
+// 2. Заполнить ее значениями:
+  // 1 Ivan Petrov, 28, male, Product manager, 5000, Germany, Berlin
+  // 2 Svetlana Ivanova, 38, female, Designer, 3000, Germany, Bremen
+  // 3 Olga Sidorova, 22, female, PR manager, 4500, Germany, Dresden
+
+db.profiles.insertMany([
+    {
+    _id: 1,
+    firstname: 'Ivan',
+    lastname: 'Petrov',
+    age: 28,
+    gender: 'male',
+    position: 'Product manager',
+    salary: 5000,
+    country: 'Germany',
+    city: 'Berlin'
+    },
+    {
+    _id: 2,
+    firstname: 'Svetlana',
+    lastname: 'Ivanova',
+    age: 38,
+    gender: 'female',
+    position: 'Designer',
+    salary: 3000,
+    country: 'Germany',
+    city: 'Bremen'
+    },
+    {
+    _id: 3,
+    firstname: 'Olga',
+    lastname: 'Sidorova',
+    age: 22,
+    gender: 'female',
+    position: 'PR manager',
+    salary: 4500,
+    country: 'Germany',
+    city: 'Dresden'
+    },
+{
+    _id: 4,
+    firstname: "Ivan",
+    lastname: 'Petrov',
+    age: 56,
+    gender: 'male',
+    position: 'Product manager',
+    salary: 5700,
+    country: 'Germany',
+    city: 'Berlin'
+    },
+    {
+    _id: 5,
+    firstname: "Semen",
+    lastname: 'Petrov',
+    age: 28,
+    gender: 'male',
+    position: 'Product manager',
+    salary: 4000,
+    country: 'France',
+    city: 'Paris'
+    },
+    {
+    _id: 6,
+    firstname: "Olga",
+    lastname: 'Petrova',
+    age: 27,
+    gender: 'female',
+    position: 'Product manager',
+    salary: 8000,
+    country: 'Spain',
+    city: 'Madrid'
+    },
+    {
+    _id: 7,
+    firstname: "Ivan",
+    lastname: 'Ushanov',
+    age: 34,
+    gender: 'male',
+    position: 'Product manager',
+    salary: 5100,
+    country: 'Germany',
+    city: 'Berlin'
+}
+]);
+
+// 4. Документу с айди 3 заменить свойство city а пустой
+// массив. А потом добавить в этот массив значение 'Bremen'
+db.profiles.updateOne(
+    {_id: 3},
+    {$set: {city: ['Bremen']}}
+)
+
+// 5. Всем людям с фамилией Petrov или тем,
+// чей возраст входит в диапазон 
+// от 20 до 30 лет включительно, 
+// добавить свойство points со значением 10
+db.profiles.updateMany(
+    {$or: [
+        {lastname:'Petrov'},
+        {age: {$gte:20,$lte:30}}
+        ]},
+    {$set: {points: 10}}
+);
+
+//6. у всех элементов заменить city Berlin, Bremen, Dresden
+db.profiles.updateMany(
+    {},
+    {$set: {city:['Berlin', 'Bremen', 'Dresden']}}
+)
+
+// 7. Документу с айди 5 заменить свойство city 'Bremen' на 'Hamburg'
+db.profiles.updateOne(
+    {_id: 5, city: 'Bremen'},
+    {$set: {'city.$': 'Hamburg'}}
+);
+
+// Пагинация и сортировка
+// limit() ограничивает колличество элементов в выборке
+db.profiles.find().limit(5)
+
+db.profiles.find(
+    {salary: {$gte:5000}}
+).limit(1);
+
+//skip()
+db.profiles.find().skip(2);
+
+//Комбинирование методов skip и limit
+//пропустить первые 3 и вывести 4,5,6
+db.profiles.find().skip(3).limit(3); 
+
+// sort
+// отсортировать выборку по возрасту 
+// 1 параметр от меньшего к большему
+db.profiles.find().sort({age:1})
+// -1 параметр от меньшего к большему
+db.profiles.find().sort({age:-1})
+
+// отсортировать выборку по фамилиями в алфавитном порядке
+db.profiles.find().sort({lastname:1})
+
+// ДЗ
+// 1. Людям с айди от 4 до 6 увеличить зарплату на 300
+db.profiles.updateMany({
+    _id: {$in: [4,5,6]}},
+    {$inc: {salary: 300}}
+);
+
+// 2. Вывести первые три документа из коллекци
+db.profiles.find().limit(3);
+
+// 3. Вывести 4, 5, 6 и 7 документы из коллекции
+db.profiles.find().skip(3).limit(3);
+
+// 4. Отсортировать документы по возрасту (от младшего к старшему)
+db.profiles.find().sort({age: 1});
+
+// 5. Отсортировать документы по зарплате (от большей к меньшей)
+db.profiles.find().sort({salary: -1});
+
+// 6. Вывести 5 документов с самой большой зарплатой
+db.profiles.find().sort({salary: -1}).limit(5);
+
+// 7. Вывести 5 самых молодых людей из коллекции
+db.profiles.find().sort({age: 1}).limit(5);
+
