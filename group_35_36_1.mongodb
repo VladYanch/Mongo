@@ -1,2 +1,6 @@
-use ('group_35_36_1');
-db.profiles.find().sort({age: 1}).limit(5);
+// db.workers.find({
+//     position: {$in:['Barista','Chef']
+//     }})
+
+use group_35_36_1;
+    db.workers.find()

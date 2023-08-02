@@ -84,14 +84,75 @@ db.workers.find(
         {firstname: 1, salary: 1}
     )
 
-    Найти всех работников, возраст которых не равен 27.
+Найти всех работников, возраст которых не равен 27.
     db.workers.find({
         age: {$ne:27}
         },
         {firstname: 1, salary: 1}
     )
 
-    Найти всех работников, занимающих должность "Barista" или "Chef".
+Найти всех работников, занимающих должность "Barista" или "Chef".
     db.workers.find({
     position: {$in:['Barista','Chef']
     }})
+
+Найти всех работников, умеющих либо "baking bread" либо "preparing drinks"
+    db.workers.find({
+        skills: {$in:['baking bread','preparing drinks']
+    }})
+
+Найти всех работников, не умеющих "answering phone calls".
+        db.workers.find({
+        skills: {$ne: 'answering phone calls'}
+        })
+
+        db.workers.find({
+        skills: {$nin:['answering phone calls']
+    }})
+
+Найти всех работников,  не умеющих  "baking bread" и "preparing drinks"
+            db.workers.find({
+        skills: {$nin:['baking bread','preparing drinks']
+    }})
+
+    db.workers.updateOne(
+        {id: 1},
+        {$set: {lastname: 'Smith'}}
+    )
+
+Обновить должность работника с ID равным 2 на "Head Server".
+        db.workers.updateOne(
+        {id: 2},
+        {$set: {position: 'Head Server'}}
+    )
+
+Увеличить зарплату всех работников на 10%.
+        db.workers.updateMany(
+        {},{$mul: {salary: 1.1}}
+        )
+
+Добавить новый навык "serving desserts" работнику с ID равным 3.
+    db.workers.updateOne(
+    {id:3},{$push: {skills: 'serving desserts'}}
+    )
+
+Удалить навык "taking payments" у всех работников.
+    db.workers.updateMany(
+    {},{$pull: {skills: 'taking payments'}}
+    )
+
+Увеличить зарплату работника с ID равным 1 на 300.
+        db.workers.updateOne(
+        {id: 1},
+        {$inc: {salary: 300}}
+    )
+
+Уменьшить всем сотрудникам возраст на 4 года
+    db.workers.updateMany(
+    {},{$inc: {age: -3}}
+    ) 
+    
+
+    db.workers.updateMany(
+    {},{$rename: {'position','job'}}
+    ) 
