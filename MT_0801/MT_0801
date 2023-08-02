@@ -1,0 +1,26 @@
+use network
+
+db.users.insertMany([
+    { _id:1, fullname: 'hacker111', country: 'Germany'},
+    { _id:2, fullname: 'user 2', country: 'USA'},
+    { _id:3, fullname: 'user 3', country: 'China'}
+])
+
+db.users.find({country: 'China'});
+db.users.find({country: {$ne: 'China'}})
+
+db.users.updateMany({country:'China'},
+                    {$set: {is_blocked: true}})
+
+db.users.find({is_blocked: true},
+            {fullname: 1})             
+
+db.users.find({is_blocked: {$ne: true}},
+            {fullname: 1})
+            
+db.users.updateMany({is_blocked: true},{$unset: {is_blocked: null}}) 
+
+db.users.updateOne(
+    { _id: 1},
+    {$addToSet: {tag: 'admin'}}
+)
